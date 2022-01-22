@@ -1,12 +1,20 @@
 class CustomPromise {
-   constructor (then) 
-   {
-      this.then = then
-   }
+    constructor(executor) {
+        this.status = "fulfilled"; //временно
+    }
+
+    then(onFulfilled, onRejected) {
+        if (this.status === "fulfilled") {
+            onFulfilled();
+        } else if (this.status === "rejected") {
+            onRejected();
+        }
+    }
 }
 
+
 let p = new CustomPromise((resolve, reject) => {
-    //делаем какую-нибудь медленную операцию
+    //делаем какую-нибудь операцию подверженную ошибкам или медленную
     if (Math.random() < 0.5) {
         resolve();
     } else {
@@ -14,6 +22,6 @@ let p = new CustomPromise((resolve, reject) => {
     }
 });
 
-p.then(()=>console.log('все ок'),()=>console.error('что то пошло не так'));
+p.then(() => console.log('все ок'), () => console.error('что то пошло не так'));
 
 
