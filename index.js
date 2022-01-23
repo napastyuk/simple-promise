@@ -4,6 +4,7 @@ class CustomPromise {
 
         //колбеки для смены флага status. 
         //вызовется только один из них
+        //проверка status что бы избежать повторных запусков
         const resolve = () => {
             if (this.status === "pending") this.status = "fulfilled"
         };
@@ -22,6 +23,7 @@ class CustomPromise {
     }
 
     //в зависимости от status запускаем один из переданных колбеков
+    //если статус pending то не запустимся совсем что бы избежать досрочного запуска
     then(onFulfilled, onRejected) {
         if (this.status === "fulfilled") {
             onFulfilled();
@@ -32,15 +34,18 @@ class CustomPromise {
 }
 
 let p = new CustomPromise((resolve, reject) => {
-    //делаем какую-нибудь операцию подверженную ошибкам или медленную 
+    //делаем какую-нибудь операцию подверженную ошибкам  
     if (Math.random() < 0.5) {
         resolve();
     } else {
         reject();
     }
+    //setTimeout(() => resolve(), 1000);
+
 });
 
-console.log(p.status);
+p.then(()=>console.log('все ок'),()=>console.log('ошибка'))
+
 
 
 
